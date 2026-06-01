@@ -5,8 +5,7 @@ healthcare provider directories by validating listings against authoritative
 federal sources (NPPES, OIG LEIE) and claims activity.
 
 Built on a modern data stack (Python, SQL, DuckDB, medallion architecture) as a
-hands-on exploration of provider-directory accuracy — a well-documented problem
-in healthcare data engineering.
+hands-on exploration of provider-directory accuracy, which is a well-documented problem in healthcare data engineering.
 
 ![Validation results](assets/validation_summary.png)
 
@@ -64,26 +63,11 @@ directly to production:
 | Python scripts | dbt + Spark |
 | Manual run | Airflow / Argo |
 
-## Run it yourself
-
-```bash
-python3 -m venv venv && source venv/bin/activate
-pip install duckdb pandas dbt-duckdb great-expectations faker requests matplotlib
-
-python3 scripts_fetch_data.py     # fetch real + generate synthetic data
-python3 pipeline/bronze.py        # raw ingestion
-python3 pipeline/silver.py        # clean & standardize
-python3 pipeline/validate.py      # federated validation
-python3 pipeline/gold.py          # trust scores + actions
-python3 pipeline/visualize.py     # summary chart
-```
-
-All data is either public federal data or synthetic — **no PHI** is used or stored.
-
 ## Notes & honest limitations
 
+- All data is either public federal data or synthetic, and **no PHI** is used or stored.
 - The directory and claims feeds are **synthetic** (seeded for reproducibility),
-  with realistic errors injected so results can be verified against known ground truth.
+  with realistic errors injected so that the results can be verified against known ground truth.
 - Name-based exclusion matching is intentionally conservative; production systems
   would add fuzzy matching, address normalization, and taxonomy checks.
 - This is a learning project exploring the problem space, not a production system.
