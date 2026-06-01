@@ -71,3 +71,7 @@ directly to production:
 - Name-based exclusion matching is intentionally conservative; production systems
   would add fuzzy matching, address normalization, and taxonomy checks.
 - This is a learning project exploring the problem space, not a production system.
+
+---
+
+**Author:** Prathiksha Mohan Raje Urs · Prathiksha Urs’s@gmail.com
