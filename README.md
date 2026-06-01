@@ -19,11 +19,11 @@ and create compliance exposure for plans.
 
 The modern fix is to stop treating the directory as self-evident and instead
 **cross-validate every listing against independent authoritative sources.**
-That's a data-engineering problem, and that's what this pipeline does.
+That's a data engineering problem, and that's what this pipeline does.
 
 ## What it does
 
-It runs a **federated validation framework** — each listing is judged against
+It runs a **federated validation framework**, and each listing is judged against
 several independent sources, not one:
 
 | Check | Source it validates against | Severity |
@@ -41,7 +41,7 @@ Each listing gets a **weighted trust score (0–100)** and a **recommended actio
 
 - **371** directory listings validated against **354** real providers,
   **83,256** real OIG exclusion records, and **2,783** claims
-- **41.5%** of listings failed at least one check — in line with real CMS audit findings
+- **41.5%** of listings failed at least one check - in line with real CMS audit findings
 - Surfaced **1 real OIG-excluded provider** from live federal data
 - Output: **36 REMOVE**, **86 REVIEW**, **249 KEEP**
 
