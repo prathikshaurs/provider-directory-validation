@@ -74,4 +74,4 @@ directly to production:
 
 ---
 
-**Author:** Prathiksha Mohan Raje Urs · prathikshamurs@gmail.com
+**Author:** Prathiksha · prathikshamurs@gmail.com
