@@ -1,17 +1,8 @@
-"""
-FEDERATED VALIDATION FRAMEWORK
-Each rule is a small, independent function that flags directory listings
-by cross-referencing an authoritative source. Rules are registered in a
-list, so adding/removing a check is a one-line change (that's the
-'framework', not a one-off script). Results feed a per-listing trust score.
-"""
 import duckdb
 
 DB = "provider_validation.duckdb"
 
-# ---- Each rule returns a SQL boolean expression that is TRUE when the
-#      listing FAILS that rule. Keeping rules as data (a list) is what
-#      makes this a configurable framework. ----
+# Each rule returns a SQL boolean exp: TRUE when the listing FAILS that rule
 RULES = [
     {
         "name": "invalid_npi",
@@ -48,8 +39,7 @@ RULES = [
 def run():
     con = duckdb.connect(DB)
 
-    # Build a base table that joins each directory listing to all sources ONCE.
-    # LEFT JOINs mean 'keep every directory row, attach source info if it exists'.
+    # Base table joins each directory listing to all sources ONCE
     con.execute("DROP TABLE IF EXISTS validation_base")
     con.execute("""
         CREATE TABLE validation_base AS
@@ -71,8 +61,7 @@ def run():
         ) c ON d.npi = c.npi
     """)
 
-    # Apply each rule as its own boolean column: 1 = failed that check.
-    # We re-alias the joined columns so the rule SQL reads naturally.
+    # For rules: 1 = failed that check
     flag_cols = []
     for r in RULES:
         sql = (r["flag_sql"]
@@ -91,7 +80,7 @@ def run():
         FROM validation_base
     """)
 
-    # Print a summary: how many listings failed each rule.
+    # Printing a summary of how many listings failed each rule
     print("Validation results by rule:")
     print(f"  {'RULE':22s} {'SEVERITY':9s} FAILED")
     for r in RULES:

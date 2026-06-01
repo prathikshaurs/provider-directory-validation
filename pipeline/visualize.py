@@ -1,10 +1,9 @@
 """
-Generates a summary chart of validation results for the README / one-pager.
-Saves to assets/validation_summary.png
+Summary chart of validation results -> saved to assets/validation_summary.png
 """
 import duckdb
 import matplotlib
-matplotlib.use("Agg")  # render without needing a display window
+matplotlib.use("Agg")  
 import matplotlib.pyplot as plt
 import os
 
@@ -31,7 +30,7 @@ actions = actions.sort_values("o")
 
 con.close()
 
-# --- build a 2-panel figure ---
+# --- building a 2-panel figure ---
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
 fig.suptitle("Provider Directory Validation — Results Summary", fontsize=15, fontweight="bold")
 

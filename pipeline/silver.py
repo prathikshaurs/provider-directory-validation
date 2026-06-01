@@ -1,11 +1,10 @@
 """
-SILVER LAYER — clean & standardize.
-Takes the raw bronze_* tables and produces clean silver_* tables with:
-  - trimmed, uppercased names (so matching is reliable)
-  - NPIs normalized to clean 10-char strings (leading zeros preserved)
+SILVER LAYER (cleaning and standardizing the data)
+bronze_ tables -> silver_* tables:
+  - trimmed, uppercased names (so that matching is reliable)
+  - NPIs normalized to clean 10-char strings (leading zeros preserved since they are IDs)
   - blanks converted to NULL (so 'missing' is explicit, not an empty string)
   - typed columns where it matters (dates, numbers)
-Clean inputs here mean the validation layer can trust what it receives.
 """
 import duckdb
 
@@ -14,7 +13,7 @@ DB = "provider_validation.duckdb"
 def run():
     con = duckdb.connect(DB)
 
-    # ---- silver_nppes: our source of truth ----
+    # silver_nppes: the source of truth
     con.execute("DROP TABLE IF EXISTS silver_nppes")
     con.execute("""
         CREATE TABLE silver_nppes AS
@@ -29,8 +28,7 @@ def run():
         WHERE npi IS NOT NULL AND TRIM(npi) <> ''
     """)
 
-    # ---- silver_directory: the data we validate ----
-    # NULLIF turns empty strings into real NULLs so 'missing phone' is explicit.
+    # silver_directory: the data we validate
     con.execute("DROP TABLE IF EXISTS silver_directory")
     con.execute("""
         CREATE TABLE silver_directory AS
@@ -48,7 +46,7 @@ def run():
         FROM bronze_directory
     """)
 
-    # ---- silver_claims: typed dates and amounts ----
+    # silver_claims: for typed dates and amounts
     con.execute("DROP TABLE IF EXISTS silver_claims")
     con.execute("""
         CREATE TABLE silver_claims AS
@@ -61,9 +59,9 @@ def run():
         WHERE npi IS NOT NULL AND TRIM(npi) <> ''
     """)
 
-    # ---- silver_exclusions: the OIG blacklist, normalized for matching ----
+    # silver_exclusions: the OIG blacklist, normalized for matching
     # Real NPIs only (drop the 0000000000 placeholders for NPI matching),
-    # but keep names so we can also match by name.
+    # but keeps names so it can also match by name
     con.execute("DROP TABLE IF EXISTS silver_exclusions")
     con.execute("""
         CREATE TABLE silver_exclusions AS

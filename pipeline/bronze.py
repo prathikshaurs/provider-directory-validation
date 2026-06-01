@@ -1,8 +1,6 @@
 """
-BRONZE LAYER — raw ingestion.
-Loads all source files into DuckDB exactly as-is (no cleaning).
-This is the 'landing zone'. We keep raw copies so we can always
-reprocess from the original if our logic changes.
+BRONZE LAYER (raw ingestion)
+Source files -> DuckDB
 """
 import duckdb
 
@@ -11,9 +9,8 @@ DB = "provider_validation.duckdb"
 def run():
     con = duckdb.connect(DB)
 
-    # Each source becomes a bronze_* table. read_csv_auto infers columns.
-    # all_varchar=true loads everything as text so messy raw values
-    # (blank NPIs, odd formats) never break ingestion. Cleaning is Silver's job.
+    # Each source = bronze_ table
+    # all_varchar=true - to load everything as text to avoid breaking ingestion
     sources = {
         "bronze_nppes":     "data/raw/nppes_providers.csv",
         "bronze_directory": "data/raw/provider_directory.csv",

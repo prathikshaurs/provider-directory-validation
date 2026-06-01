@@ -1,6 +1,6 @@
 """
 Fetches a real sample of providers from the NPPES API and generates
-a synthetic provider directory + claims feed with realistic errors baked in.
+a synthetic provider directory & claims feed with realistic errors.
 All synthetic data — no PHI.
 """
 import requests, csv, random, time
@@ -12,7 +12,7 @@ Faker.seed(42)
 RAW = "data/raw"
 
 # The NPPES API needs more than just 'state' to return results.
-# We query (city, state) pairs across big metros to get real variety.
+# So querying (city, state) pairs across big metros to get real variety
 CITY_STATE = [
     ("New York", "NY"), ("Brooklyn", "NY"),
     ("Los Angeles", "CA"), ("San Diego", "CA"),
@@ -38,7 +38,7 @@ def fetch_real_providers():
             print(f"  {city}, {st}: {len(results)} providers")
             for res in results:
                 basic = res.get("basic", {})
-                # find the practice-location address
+                # practice-location address
                 addr = {}
                 for a in res.get("addresses", []):
                     if a.get("address_purpose") == "LOCATION":
@@ -57,10 +57,10 @@ def fetch_real_providers():
                         "state": addr.get("state", st),
                         "postal_code": (addr.get("postal_code", "") or "")[:5],
                     })
-            time.sleep(0.3)  # be polite to the public API
+            time.sleep(0.3)
         except Exception as e:
             print(f"  warning: {city},{st} failed ({e})")
-    # de-duplicate by NPI
+    # de-duplicating by NPI
     seen, unique = set(), []
     for p in providers:
         if p["npi"] not in seen:
@@ -78,7 +78,7 @@ with open(f"{RAW}/nppes_providers.csv", "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=["npi","first_name","last_name","city","state","postal_code"])
     w.writeheader(); w.writerows(real)
 
-# ---- synthetic DIRECTORY with injected errors ----
+# synthetic Directory with injected errors
 directory = []
 for i, p in enumerate(real):
     directory.append({
@@ -111,7 +111,7 @@ with open(f"{RAW}/provider_directory.csv", "w", newline="") as f:
     w.writeheader(); w.writerows(directory)
 print(f"  built directory with {len(directory)} listings (errors injected)")
 
-# ---- synthetic CLAIMS feed (75% of providers active; rest are 'ghosts') ----
+# synthetic CLAIMS feed (75% of providers are active; rest are 'ghosts')
 claims = []
 active = random.sample(real, k=int(len(real)*0.75))
 for p in active:
